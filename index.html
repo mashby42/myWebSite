@@ -41,31 +41,75 @@
     height: calc(100% - 50px);
     z-index: -1;
   }
+  
+  .controls {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+  }
 </style>
 </head>
 <body>
   <div class="animated-text">Welcome to My Website! This is a Fancy Background with Animated Text</div>
   <canvas id="mandelbrotCanvas"></canvas>
+  
+  <div class="controls">
+    <label for="maxIteration">Max Iteration:</label>
+    <input type="range" id="maxIteration" name="maxIteration" min="50" max="500" value="100">
+    <br>
+    <label for="magnificationFactor">Magnification Factor:</label>
+    <input type="range" id="magnificationFactor" name="magnificationFactor" min="50" max="1000" value="300">
+    <br>
+    <label for="panX">Pan X:</label>
+    <input type="range" id="panX" name="panX" min="-2" max="2" step="0.01" value="2">
+    <br>
+    <label for="panY">Pan Y:</label>
+    <input type="range" id="panY" name="panY" min="-2" max="2" step="0.01" value="1.5">
+  </div>
 
   <script>
     const canvas = document.getElementById('mandelbrotCanvas');
     const ctx = canvas.getContext('2d');
 
-    const maxIteration = 1000;
-    const magnificationFactor = 30;
-    const panX = 2;
-    const panY = 1.5;
+    let maxIteration = 100;
+    let magnificationFactor = 300;
+    let panX = 2;
+    let panY = 1.5;
 
-    for (let x = 0; x < canvas.width; x++) {
-      for (let y = 0; y < canvas.height; y++) {
-        let belongsToSet = checkIfBelongsToMandelbrotSet(x / magnificationFactor - panX,
-          y / magnificationFactor - panY);
-        if (belongsToSet == 0) {
-          ctx.fillStyle = '#000';
-          ctx.fillRect(x, y, 1, 1); // Draw a black pixel
-        } else {
-          ctx.fillStyle = `hsl(0, 100%, ${belongsToSet}%)`;
-          ctx.fillRect(x, y, 1, 1); // Draw a colorful pixel
+    const maxIterationSlider = document.getElementById('maxIteration');
+    const magnificationFactorSlider = document.getElementById('magnificationFactor');
+    const panXSlider = document.getElementById('panX');
+    const panYSlider = document.getElementById('panY');
+
+    maxIterationSlider.addEventListener('input', updateParameters);
+    magnificationFactorSlider.addEventListener('input', updateParameters);
+    panXSlider.addEventListener('input', updateParameters);
+    panYSlider.addEventListener('input', updateParameters);
+
+    function updateParameters() {
+      maxIteration = parseInt(maxIterationSlider.value);
+      magnificationFactor = parseInt(magnificationFactorSlider.value);
+      panX = parseFloat(panXSlider.value);
+      panY = parseFloat(panYSlider.value);
+      drawMandelbrot();
+    }
+
+    function drawMandelbrot() {
+      for (let x = 0; x < canvas.width; x++) {
+        for (let y = 0; y < canvas.height; y++) {
+          let belongsToSet = checkIfBelongsToMandelbrotSet(x / magnificationFactor - panX,
+            y / magnificationFactor - panY);
+          if (belongsToSet == 0) {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(x, y, 1, 1); // Draw a black pixel
+          } else {
+            ctx.fillStyle = `hsl(0, 100%, ${belongsToSet}%)`;
+            ctx.fillRect(x, y, 1, 1); // Draw a colorful pixel
+          }
         }
       }
     }
@@ -88,6 +132,9 @@
       }
       return 0; // Return zero if in set
     }
+
+    // Initial drawing
+    updateParameters();
   </script>
 </body>
 </html>
