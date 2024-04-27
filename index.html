@@ -58,16 +58,16 @@
   <canvas id="mandelbrotCanvas"></canvas>
   
   <div class="controls">
-    <label for="maxIteration">Max Iteration:</label>
+    <label for="maxIteration">Max Iteration: <span id="maxIterationValue">100</span></label>
     <input type="range" id="maxIteration" name="maxIteration" min="50" max="500" value="100">
     <br>
-    <label for="magnificationFactor">Magnification Factor:</label>
+    <label for="magnificationFactor">Magnification Factor: <span id="magnificationFactorValue">300</span></label>
     <input type="range" id="magnificationFactor" name="magnificationFactor" min="5" max="60" value="30">
     <br>
-    <label for="panX">Pan X:</label>
+    <label for="panX">Pan X: <span id="panXValue">2</span></label>
     <input type="range" id="panX" name="panX" min="-2" max="2" step="0.01" value="2">
     <br>
-    <label for="panY">Pan Y:</label>
+    <label for="panY">Pan Y: <span id="panYValue">1.5</span></label>
     <input type="range" id="panY" name="panY" min="-2" max="2" step="0.01" value="1.5">
   </div>
 
@@ -96,6 +96,7 @@
       panX = parseFloat(panXSlider.value);
       panY = parseFloat(panYSlider.value);
       drawMandelbrot();
+      updateSliderValues();
     }
 
     function drawMandelbrot() {
@@ -132,6 +133,13 @@
           return (i / maxIteration * 100);
       }
       return 0; // Return zero if in set
+    }
+
+    function updateSliderValues() {
+      document.getElementById('maxIterationValue').textContent = maxIteration;
+      document.getElementById('magnificationFactorValue').textContent = magnificationFactor;
+      document.getElementById('panXValue').textContent = panX;
+      document.getElementById('panYValue').textContent = panY;
     }
 
     // Initial drawing
